@@ -3,8 +3,16 @@ from agent_llm import LLMAgent
 import time
 from config import api_version
 
+# List of recommended questions
+recommended_questions = [
+    "What is the refund process for failed reservations, and which charges may be forfeited?",
+    "How are cancellation charges calculated for confirmed tickets based on time and class?",
+    "How is a refund processed for a party e-ticket with mixed confirmed and RAC/waitlisted passengers?"
+]
+
+
 st.set_page_config(page_title="Abhi Search Engine using LLM Agent", layout="wide")
-st.title("🖥️LLM Agent Bot - Real-Time Query Handler🤖")
+st.title("🧠Advanced LLM Agent Bot")
 if 'api_key' not in st.session_state:
     st.session_state.api_key = ''
 if 'endpoint' not in st.session_state:
@@ -78,8 +86,6 @@ if st.session_state.api_key and st.session_state.model_name:
         api_version=api_version,
         model_name=gpt_engine_name
     )
-# Main content area
-st.markdown("### What can I help you with today?🤔💬")
 
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
@@ -93,7 +99,6 @@ def process_input(prompt):
         st.markdown(prompt)
     
     st.session_state.chat_history.append({"role": "user", "content": prompt})
-
     try:
         final_answer = ai_agent.llm(query=st.session_state.chat_history, user_id=st.session_state.input_key)
         
@@ -104,7 +109,13 @@ def process_input(prompt):
     except Exception as e:
         st.error(f"Something went wrong: {e}")
 
-
+# Display recommended questions as buttons
+if not st.session_state.chat_history:
+    st.write("**Recommended Questions:**")
+    cols = st.columns(len(recommended_questions))
+    for i, question in enumerate(recommended_questions):
+        if cols[i].button(question):
+            process_input(question)
 
 # Directly capture user input
 if query := st.chat_input("Ask your question here:"):

@@ -19,13 +19,17 @@ ai_agent = LLMAgent(
     model_name=model_name
 )
 
+chat_history = []
+
 class InteractionRequest(BaseModel):
     query: str
 
 @app.post("/interaction/{id}")
 async def track_interaction(id: str, request: InteractionRequest):
     try:
-        response = ai_agent.llm(request.query, id)
+        chat_history.append({"role": "user", "content": request.query})
+        response = ai_agent.llm(chat_history, id)
+        chat_history.append({"role": "assistant", "content": response})
         return {"answer":response}
     except HTTPException as http_error:
         raise http_error
