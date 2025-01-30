@@ -27,12 +27,13 @@ class LLMAgent:
         self.agent_executor = create_react_agent(self.model, self.tools, checkpointer=self.memory)
     
     def llm(self, query, user_id):
+        if len(query) > 7:
+            query=query[-7:]
         config = {"configurable": {"thread_id": user_id}}
-        
         # Run the agent executor's stream method
         response_chunks = []
         for chunk in self.agent_executor.stream(
-            {"messages": [HumanMessage(content=query)]}, config
+            {"messages": query}, config
         ):
             if 'agent' in chunk:
                 # Proceed with accessing 'agent' related keys

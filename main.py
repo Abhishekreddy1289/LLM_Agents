@@ -3,10 +3,8 @@ from agent_llm import LLMAgent
 import time
 from config import api_version
 
-# Set the page title and layout
 st.set_page_config(page_title="Abhi Search Engine using LLM Agent", layout="wide")
-
-# Initialize session state variables
+st.title("🖥️LLM Agent Bot - Real-Time Query Handler🤖")
 if 'api_key' not in st.session_state:
     st.session_state.api_key = ''
 if 'endpoint' not in st.session_state:
@@ -17,7 +15,7 @@ if 'model_name' not in st.session_state:
     st.session_state.model_name = ''
 if 'openai_type' not in st.session_state:
     st.session_state.openai_type = ''
-if 'input_key' not in st.session_state:  # Ensure input_key is initialized
+if 'input_key' not in st.session_state: 
     st.session_state.input_key = None
 
 # Function to display the modal
@@ -43,10 +41,8 @@ def display_modal():
                 # Collect and display the input values
                 st.success("Details submitted successfully!")
 
-# Display the modal when the app starts
 display_modal()
 
-# Function to show notification
 def show_notification(message, message_type="success"):
     # Define CSS styles for the notification
     css = f"""
@@ -69,7 +65,6 @@ def show_notification(message, message_type="success"):
     time.sleep(5)
     notification_placeholder.empty()
 
-# Initialize AI Agent if API key is available
 if st.session_state.api_key and st.session_state.model_name:
     openai_type = st.session_state.openai_type
     gpt_engine_name = st.session_state.model_name
@@ -83,31 +78,29 @@ if st.session_state.api_key and st.session_state.model_name:
         api_version=api_version,
         model_name=gpt_engine_name
     )
+# Main content area
+st.markdown("### What can I help you with today?🤔💬")
 
-# Initialize chat history in session state if not already present
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
-# Display chat history
 for message in st.session_state.chat_history:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
 def process_input(prompt):
-    # Display user message in chat message container
     with st.chat_message("user"):
         st.markdown(prompt)
-    # Add user message to chat history
+    
     st.session_state.chat_history.append({"role": "user", "content": prompt})
 
     try:
-        # Get response from LLM agent
-        final_answer = ai_agent.llm(query=prompt, user_id=st.session_state.input_key)
-        # Display bot's response in chat message container
+        final_answer = ai_agent.llm(query=st.session_state.chat_history, user_id=st.session_state.input_key)
+        
         with st.chat_message("bot"):
             st.markdown(final_answer)
-        # Add bot's response to chat history
-        st.session_state.chat_history.append({"role": "bot", "content": final_answer})
+        
+        st.session_state.chat_history.append({"role": "assistant", "content": final_answer})
     except Exception as e:
         st.error(f"Something went wrong: {e}")
 
