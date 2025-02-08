@@ -6,3 +6,5 @@ langchain-anthropic
 tavily-python 
 langgraph-checkpoint-sqlite
 langchain-openai
+litellm
+langchain-mistralai

@@ -30,7 +30,7 @@ if 'input_key' not in st.session_state:
 def display_modal():
     with st.expander("Please enter your Model Details:", expanded=False):
         # User selection for OpenAI or Azure OpenAI
-        service = st.selectbox("Select Service", ["OpenAI", "Azure OpenAI"])
+        service = st.selectbox("Select Service", ["Mistral","OpenAI", "Azure OpenAI"])
         with st.form(key='model_details_form'):
             if service == "OpenAI":
                 st.session_state.openai_type = "openai"
@@ -42,6 +42,11 @@ def display_modal():
                 st.session_state.api_key = st.text_input("API Key", type="password")
                 st.session_state.endpoint = st.text_input("Endpoint")
                 st.session_state.version = st.text_input("Version")
+                st.session_state.model_name = st.text_input("Model Name")
+                st.session_state.user_name = st.text_input("User Name/ID")
+            elif service == "Mistral":
+                st.session_state.openai_type = "mistral"
+                st.session_state.api_key = st.text_input("API Key", type="password")
                 st.session_state.model_name = st.text_input("Model Name")
                 st.session_state.user_name = st.text_input("User Name/ID")
 
@@ -121,9 +126,7 @@ if not st.session_state.chat_history:
 if query := st.chat_input("Ask your question here:"):
     process_input(query)
 
-# Dummy element to trigger auto-scrolling
 auto_scroll = st.empty()
 
-# Trigger auto-scroll by adding an empty message after all other messages
 with auto_scroll:
     st.write("") 

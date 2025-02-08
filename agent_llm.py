@@ -5,6 +5,8 @@ from langgraph.prebuilt import create_react_agent
 from langgraph.checkpoint.memory import MemorySaver
 from langchain_openai import ChatOpenAI
 from datetime import datetime
+from langchain.chat_models import init_chat_model
+from config import *
 
 class LLMAgent:
     def __init__(self, openai_type, model_name,api_key,azure_endpoint=None, api_version=None):
@@ -16,6 +18,8 @@ class LLMAgent:
                 azure_deployment=model_name,
                 openai_api_version=api_version
             )
+        elif openai_type == "mistral":
+            self.model=init_chat_model(model=model_name,api_key=api_key, model_provider="mistralai")
         else:
             self.model = ChatOpenAI(model=model_name,api_key=api_key)
         
@@ -48,11 +52,17 @@ Today's date: {today_date}"""
             print(chunk)
             if 'agent' in chunk:
                 # Proceed with accessing 'agent' related keys
-                print(chunk['agent']['messages'][0].content)
-                response_chunks.append(chunk['agent']['messages'][0].content)
+                print(type(chunk['agent']['messages'][0].content))
+                try:
+                    answer=""
+                    for i,text in enumerate(chunk['agent']['messages'][0].content):
+                        if text["type"] == "text":
+                            answer+=text["text"]
+                    response_chunks.append(answer)
+                except:
+                    response_chunks.append(chunk['agent']['messages'][0].content)
             else:
                 print("No 'agent' key found in the response.")
 
         
         return response_chunks[-1]
-
