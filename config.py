@@ -12,7 +12,6 @@ os.environ["AZURE_OPENAI_API_VERSION"]="2023-07-01-preview"
 os.environ["EMBEDDING_MODEL"]="text-embedding-ada-002"
 
 
-
 api_key=os.environ["AZURE_OPENAI_API_KEY"]
 azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"]
 api_version=os.environ["AZURE_OPENAI_API_VERSION"]
