@@ -1,4 +1,8 @@
 loguru==0.7.3
+PyPDF2==3.0.1
+pinecone[grpc]
+pinecone-client
+langchain-pinecone==0.2.0
 streamlit
 langchain-community 
 langgraph 
