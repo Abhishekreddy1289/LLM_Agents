@@ -19,7 +19,7 @@ recommended_questions = [
 
 
 st.set_page_config(page_title="Abhi's Multi-Agentic RAG Engine using LLMs", layout="wide")
-st.title("Multi-Agentic RAG Bot")
+st.title("🤖Multi-Agentic RAG Bot")
 if 'api_key' not in st.session_state:
     st.session_state.api_key = ''
 if 'endpoint' not in st.session_state:
